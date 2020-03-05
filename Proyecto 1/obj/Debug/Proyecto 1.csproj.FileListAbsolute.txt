@@ -1,0 +1,21 @@
+C:\Users\loosc\source\repos\Proyecto 1\Proyecto 1\bin\Debug\Proyecto 1.exe.config
+C:\Users\loosc\source\repos\Proyecto 1\Proyecto 1\bin\Debug\Proyecto 1.exe
+C:\Users\loosc\source\repos\Proyecto 1\Proyecto 1\bin\Debug\Proyecto 1.pdb
+C:\Users\loosc\source\repos\Proyecto 1\Proyecto 1\obj\Debug\Proyecto 1.csprojAssemblyReference.cache
+C:\Users\loosc\source\repos\Proyecto 1\Proyecto 1\obj\Debug\Proyecto_1.Form1.resources
+C:\Users\loosc\source\repos\Proyecto 1\Proyecto 1\obj\Debug\Proyecto_1.Properties.Resources.resources
+C:\Users\loosc\source\repos\Proyecto 1\Proyecto 1\obj\Debug\Proyecto 1.csproj.GenerateResource.cache
+C:\Users\loosc\source\repos\Proyecto 1\Proyecto 1\obj\Debug\Proyecto 1.exe
+C:\Users\loosc\source\repos\Proyecto 1\Proyecto 1\obj\Debug\Proyecto 1.pdb
+C:\Users\loosc\OneDrive\Escritorio\USAC\1S2020\Compi\Proyecto1\Proyecto 1\bin\Debug\Proyecto 1.exe.config
+C:\Users\loosc\OneDrive\Escritorio\USAC\1S2020\Compi\Proyecto1\Proyecto 1\bin\Debug\Proyecto 1.exe
+C:\Users\loosc\OneDrive\Escritorio\USAC\1S2020\Compi\Proyecto1\Proyecto 1\bin\Debug\Proyecto 1.pdb
+C:\Users\loosc\OneDrive\Escritorio\USAC\1S2020\Compi\Proyecto1\Proyecto 1\obj\Debug\Proyecto_1.Form1.resources
+C:\Users\loosc\OneDrive\Escritorio\USAC\1S2020\Compi\Proyecto1\Proyecto 1\obj\Debug\Proyecto_1.Properties.Resources.resources
+C:\Users\loosc\OneDrive\Escritorio\USAC\1S2020\Compi\Proyecto1\Proyecto 1\obj\Debug\Proyecto 1.csproj.GenerateResource.cache
+C:\Users\loosc\OneDrive\Escritorio\USAC\1S2020\Compi\Proyecto1\Proyecto 1\obj\Debug\Proyecto 1.exe
+C:\Users\loosc\OneDrive\Escritorio\USAC\1S2020\Compi\Proyecto1\Proyecto 1\obj\Debug\Proyecto 1.pdb
+C:\Users\loosc\OneDrive\Escritorio\USAC\1S2020\Compi\Proyecto1\Proyecto 1\bin\Debug\itextsharp.dll
+C:\Users\loosc\OneDrive\Escritorio\USAC\1S2020\Compi\Proyecto1\Proyecto 1\bin\Debug\itextsharp.xml
+C:\Users\loosc\OneDrive\Escritorio\USAC\1S2020\Compi\Proyecto1\Proyecto 1\obj\Debug\Proyecto 1.csproj.CopyComplete
+C:\Users\loosc\OneDrive\Escritorio\USAC\1S2020\Compi\Proyecto1\Proyecto 1\obj\Debug\Proyecto 1.csprojAssemblyReference.cache
