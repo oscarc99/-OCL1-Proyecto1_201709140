@@ -20,9 +20,11 @@ namespace Proyecto_1
     {
         ArrayList ListaPesta = new ArrayList();
         int contarpesta = 0;
-        ArrayList EXP = new ArrayList();
+        ArrayList Expresiones = new ArrayList();
         ArrayList Lexemas = new ArrayList();
+        ArrayList Conjuntos = new ArrayList();
         Lexico analizador = new Lexico();
+
 
         public Form1()
         {
@@ -108,7 +110,7 @@ namespace Proyecto_1
         {
             ArrayList tempT = new ArrayList();
             Control controlBox;
-            
+
             if (tabControl1.SelectedTab.HasChildren)
             {
                 string nombres = tabControl1.SelectedTab.Text;
@@ -125,30 +127,44 @@ namespace Proyecto_1
                         StreamWriter FilaRThtml = new StreamWriter(nombres + "RT.html");
                         FilaRThtml.Write(htmlRT(tempT));
                         FilaRThtml.Close();
-                        //Genera el html de los errores
-                        tempT = analizador.getErrores();
-                        StreamWriter FilaEThtml = new StreamWriter(nombres + "RE.html");
-                        FilaEThtml.Write(htmlRE(tempT));
-                        FilaEThtml.Close();
                         //XML tokens
                         StreamWriter FileXMLT = new StreamWriter(nombres + "RT.xml");
                         FileXMLT.Write(xmlRT(tempT));
                         FileXMLT.Close();
+
+                        //Genera el html de los errores
+
+                        tempT = analizador.getErrores();
+                        StreamWriter FilaEThtml = new StreamWriter(nombres + "RE.html");
+                        FilaEThtml.Write(htmlRE(tempT));
+                        FilaEThtml.Close();
+
                         //XML errores
                         StreamWriter FileXMLE = new StreamWriter(nombres + "RE.xml");
                         FileXMLE.Write(xmlRE(tempT));
                         FileXMLE.Close();
-                        
-
-
-
-
+                        //Agrega expresiones regulares y lexemas a memoria
+                        Lexemas.AddRange(analizador.getLexemas());
+                        Expresiones.AddRange(analizador.getExpresiones());
+                        Conjuntos.AddRange(analizador.getConjuntos());
 
                     }
                 }
+
+                generarThompson();
             }
 
 
+        }
+
+        private void generarThompson()
+        {
+            //recorro la lista de ER para generar sus AFN
+            for (int i = 0; i < Expresiones.Count; i++)
+            {
+                ExpReg temp = (ExpReg)Expresiones[i];
+                temp.generarT();
+            }
         }
 
         private string xmlRT(ArrayList t)
@@ -159,11 +175,10 @@ namespace Proyecto_1
             {
                 Token at = (Token)t[i];
                 xml += "  <Token>\n";
-                xml += "      <Nombre>"+at.getToken()+"</Nombre>\n";
+                xml += "      <Nombre>" + at.getToken() + "</Nombre>\n";
                 xml += "      <Valor>" + at.getLexema() + "</Valor>\n";
                 xml += "      <Fila>" + at.getFila() + "</Fila>\n";
                 xml += "      <Columna>" + at.getColumna() + "</Columna>\n";
-
                 xml += "  </Token>\n";
 
             }
@@ -225,7 +240,13 @@ namespace Proyecto_1
 
         private void reporteLexicoToolStripMenuItem_Click(object sender, EventArgs e)
         {
-
+            string nombres = tabControl1.SelectedTab.Text;
+            string[] a = nombres.Split('.');
+            nombres = a[0];
+            System.Diagnostics.Process.Start(nombres + "RT.html");
+            System.Diagnostics.Process.Start(nombres + "RE.html");
+            System.Diagnostics.Process.Start(nombres + "RT.xml");
+            System.Diagnostics.Process.Start(nombres + "RE.xml");
         }
 
         private void htmlLex()
@@ -241,16 +262,16 @@ namespace Proyecto_1
             html += "<th border=\"1px\" solid #0000 border-collapse: collapse> Identificador</th>  \n";
             html += "<th border=\"1px\" solid #0000 border-collapse: collapse> Lexema</th>  \n";
             html += "<th border=\"1px\" solid #0000 border-collapse: collapse> Aceptacion</th>  \n";
-            
+
             html += "</tr>  \n";
             for (int i = 0; i < Lexemas.Count; i++)
             {
                 Lexema at = (Lexema)Lexemas[i];
                 html += "<tr> \n";
-                html += "<td border=\"1px\" solid #0000 border-collapse: collapse> " + at.getID()+ "</td>  \n";
+                html += "<td border=\"1px\" solid #0000 border-collapse: collapse> " + at.getID() + "</td>  \n";
                 html += "<td border=\"1px\" solid #0000 border-collapse: collapse> " + at.getCadena() + "</td>  \n";
                 html += "<td border=\"1px\" solid #0000 border-collapse: collapse> " + at.getEstado() + "</td>  \n";
-                
+
 
                 html += "</tr> \n";
             }
@@ -306,10 +327,10 @@ namespace Proyecto_1
             {
                 Token at = (Token)t[i];
                 html += "<tr> \n";
-                html += "<td border=\"1px\" solid #0000 border-collapse: collapse> "+at.getToken()+"</td>  \n";
-                html += "<td border=\"1px\" solid #0000 border-collapse: collapse> "+at.getLexema()+"</td>  \n";
-                html += "<td border=\"1px\" solid #0000 border-collapse: collapse> "+at.getFila()+"</td>  \n";
-                html += "<td border=\"1px\" solid #0000 border-collapse: collapse> "+at.getColumna()+"</td>  \n";
+                html += "<td border=\"1px\" solid #0000 border-collapse: collapse> " + at.getToken() + "</td>  \n";
+                html += "<td border=\"1px\" solid #0000 border-collapse: collapse> " + at.getLexema() + "</td>  \n";
+                html += "<td border=\"1px\" solid #0000 border-collapse: collapse> " + at.getFila() + "</td>  \n";
+                html += "<td border=\"1px\" solid #0000 border-collapse: collapse> " + at.getColumna() + "</td>  \n";
 
                 html += "</tr> \n";
             }
@@ -319,6 +340,95 @@ namespace Proyecto_1
             html += "</body>  \n";
             html += "</html>  \n";
             return html;
+        }
+
+        private void pruebaToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            prueba();
+        }
+
+        public void prueba()
+        {
+            txtConsola.Clear();
+            txtConsola.AppendText("--------------------------- \n");
+            txtConsola.AppendText("-------- CONJUNTOS -------- \n");
+            txtConsola.AppendText("--------------------------- \n");
+            for (int i = 0; i < Conjuntos.Count; i++)
+            {
+                Conjuntos temp = (Conjuntos)Conjuntos[i];
+                txtConsola.AppendText("Nombre: " + temp.getNombre() + " ");
+                for (int j = 0; j < temp.getConjunt().Count; j++)
+                {
+                    txtConsola.AppendText("" + temp.getConjunt()[j] + " ");
+                }
+                txtConsola.AppendText(" \n");
+            }
+            txtConsola.AppendText(" \n");
+            txtConsola.AppendText("--------------------------------- \n");
+            txtConsola.AppendText("----- Expresiones Regulares -------- \n");
+            txtConsola.AppendText("---------------------------------- \n");
+            for (int i = 0; i < Expresiones.Count; i++)
+            {
+                ExpReg temporal = (ExpReg)Expresiones[i];
+                txtConsola.AppendText("Nombre: " + temporal.getNombre() + " ");
+                for (int j = 0; j < temporal.getThompson().Count; j++)
+                {
+                    Thompson t = (Thompson)temporal.getThompson()[j];
+                    txtConsola.AppendText("De " + t.getInicio() + " a " + t.getFinal() + " se traslada con " + t.getTransicion());
+
+                }
+                txtConsola.AppendText(" \n");
+                for (int j = 1; j < temporal.getTokens().Count; j++)
+                {
+                    Token tok = (Token)temporal.getTokens()[j];
+                    txtConsola.AppendText(tok.getLexema());
+
+                }
+                txtConsola.AppendText(" \n");
+
+
+            }
+        }
+
+        private void limpiarProgramaToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Expresiones.Clear();
+            Lexemas.Clear();
+            Conjuntos.Clear();
+
+        }
+
+        private void analizarLexemasToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ExpReg expresion = new ExpReg("Examen");
+            Token tok = new Token("Prueba", 5, "ID");
+            Token tok1 = new Token(".", 16, "conca");
+            Token tok2 = new Token("|", 17, "CADENA");
+            Token tok3 = new Token("a", 5, "ciclo");
+            Token tok4 = new Token("b", 5, "OR");
+            Token tok5 = new Token("*", 15, "ID");
+            Token tok6 = new Token("c", 11, "CADENA");
+
+            
+            
+            expresion.addToken(tok);
+
+            expresion.addToken(tok1);
+            expresion.addToken(tok2);
+            expresion.addToken(tok3);
+            expresion.addToken(tok4);
+            expresion.addToken(tok5);
+            expresion.addToken(tok6);
+            
+            //expresion.addToken(tok3);
+            for (int i =0; i < expresion.getTokens().Count; i++)
+            {
+                Token tokA = (Token)expresion.getTokens()[i];
+                txtConsola.AppendText(tokA.getLexema());
+                Console.WriteLine(tokA.getLexema());
+            }
+            expresion.generarT();
+            Console.WriteLine("");
         }
     }
 }

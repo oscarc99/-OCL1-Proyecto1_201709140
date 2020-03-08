@@ -34,7 +34,6 @@
             this.guardarToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.nuevaPestañaToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.eliminarPestañaToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
             this.herramientasToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.analizarDocumentoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.analizarLexemasToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -55,6 +54,7 @@
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
+            this.pruebaToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -92,7 +92,7 @@
             this.guardarToolStripMenuItem,
             this.nuevaPestañaToolStripMenuItem,
             this.eliminarPestañaToolStripMenuItem,
-            this.toolStripMenuItem2});
+            this.pruebaToolStripMenuItem});
             this.archivosToolStripMenuItem.Name = "archivosToolStripMenuItem";
             this.archivosToolStripMenuItem.Size = new System.Drawing.Size(65, 20);
             this.archivosToolStripMenuItem.Text = "Archivos";
@@ -124,13 +124,6 @@
             this.eliminarPestañaToolStripMenuItem.Text = "Eliminar pestaña";
             this.eliminarPestañaToolStripMenuItem.Click += new System.EventHandler(this.eliminarPestañaToolStripMenuItem_Click);
             // 
-            // toolStripMenuItem2
-            // 
-            this.toolStripMenuItem2.Name = "toolStripMenuItem2";
-            this.toolStripMenuItem2.Size = new System.Drawing.Size(180, 22);
-            this.toolStripMenuItem2.Text = ".";
-            this.toolStripMenuItem2.Click += new System.EventHandler(this.toolStripMenuItem2_Click);
-            // 
             // herramientasToolStripMenuItem
             // 
             this.herramientasToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -144,7 +137,7 @@
             // analizarDocumentoToolStripMenuItem
             // 
             this.analizarDocumentoToolStripMenuItem.Name = "analizarDocumentoToolStripMenuItem";
-            this.analizarDocumentoToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.analizarDocumentoToolStripMenuItem.Size = new System.Drawing.Size(169, 22);
             this.analizarDocumentoToolStripMenuItem.Text = "Analizar Pestaña";
             this.analizarDocumentoToolStripMenuItem.Click += new System.EventHandler(this.analizarDocumentoToolStripMenuItem_Click);
             // 
@@ -153,12 +146,14 @@
             this.analizarLexemasToolStripMenuItem.Name = "analizarLexemasToolStripMenuItem";
             this.analizarLexemasToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.analizarLexemasToolStripMenuItem.Text = "Analizar Lexemas";
+            this.analizarLexemasToolStripMenuItem.Click += new System.EventHandler(this.analizarLexemasToolStripMenuItem_Click);
             // 
             // limpiarProgramaToolStripMenuItem
             // 
             this.limpiarProgramaToolStripMenuItem.Name = "limpiarProgramaToolStripMenuItem";
             this.limpiarProgramaToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.limpiarProgramaToolStripMenuItem.Text = "Limpiar programa";
+            this.limpiarProgramaToolStripMenuItem.Click += new System.EventHandler(this.limpiarProgramaToolStripMenuItem_Click);
             // 
             // reportesToolStripMenuItem
             // 
@@ -173,20 +168,20 @@
             // reporteLexicoToolStripMenuItem
             // 
             this.reporteLexicoToolStripMenuItem.Name = "reporteLexicoToolStripMenuItem";
-            this.reporteLexicoToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.reporteLexicoToolStripMenuItem.Size = new System.Drawing.Size(164, 22);
             this.reporteLexicoToolStripMenuItem.Text = "Reporte Lexico";
             this.reporteLexicoToolStripMenuItem.Click += new System.EventHandler(this.reporteLexicoToolStripMenuItem_Click);
             // 
             // reporteXMLToolStripMenuItem
             // 
             this.reporteXMLToolStripMenuItem.Name = "reporteXMLToolStripMenuItem";
-            this.reporteXMLToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.reporteXMLToolStripMenuItem.Size = new System.Drawing.Size(164, 22);
             this.reporteXMLToolStripMenuItem.Text = "Reporte XML";
             // 
             // reporteLexemasToolStripMenuItem
             // 
             this.reporteLexemasToolStripMenuItem.Name = "reporteLexemasToolStripMenuItem";
-            this.reporteLexemasToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.reporteLexemasToolStripMenuItem.Size = new System.Drawing.Size(164, 22);
             this.reporteLexemasToolStripMenuItem.Text = "Reporte Lexemas";
             // 
             // splitContainer1
@@ -319,6 +314,13 @@
             this.openFileDialog1.FileName = "openFileDialog1";
             this.openFileDialog1.Filter = "Archivos ER (*.er)|*.er";
             // 
+            // pruebaToolStripMenuItem
+            // 
+            this.pruebaToolStripMenuItem.Name = "pruebaToolStripMenuItem";
+            this.pruebaToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.pruebaToolStripMenuItem.Text = "Prueba";
+            this.pruebaToolStripMenuItem.Click += new System.EventHandler(this.pruebaToolStripMenuItem_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -370,7 +372,6 @@
         private System.Windows.Forms.TabControl tabControl1;
         private System.Windows.Forms.RichTextBox txtConsola;
         private System.Windows.Forms.ToolStripMenuItem eliminarPestañaToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem2;
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
         private System.Windows.Forms.SaveFileDialog saveFileDialog1;
         private System.Windows.Forms.Panel panel1;
@@ -378,6 +379,7 @@
         private System.Windows.Forms.GroupBox AFD;
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.GroupBox groupBox3;
+        private System.Windows.Forms.ToolStripMenuItem pruebaToolStripMenuItem;
     }
 }
 

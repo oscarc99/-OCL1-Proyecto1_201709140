@@ -16,6 +16,7 @@ namespace Proyecto_1.Analizador
         ArrayList simbolos = new ArrayList();
         ArrayList conjuntos = new ArrayList();
         ArrayList expresiones = new ArrayList();
+        ArrayList lexemas = new ArrayList();
         private string archivo;
         private int fila = 0;
         private int columna = 0;
@@ -38,6 +39,11 @@ namespace Proyecto_1.Analizador
             simbolos = new ArrayList();
             conjuntos = new ArrayList();
             expresiones = new ArrayList();
+        }
+        
+        public ArrayList getLexemas()
+        {
+            return this.lexemas;
         }
 
         public ArrayList getSimbolos()
@@ -610,9 +616,191 @@ namespace Proyecto_1.Analizador
 
             }
 
+            guardarConjuntos();
+            guardarER();
+            guardarLex();
+            generarThompson();
+    }
 
+        private void generarThompson()
+        {
+            
+            for(int i =0; i < expresiones.Count; i++)
+            {
+                ExpReg temp = (ExpReg)expresiones[i];
+                temp.generarT();
 
+            }
+        }
 
+        private void guardarLex()
+        {
+            Token salida;
+            Token temp;
+            Token temp2;
+            for (int i = 2; i < simbolos.Count; i++)
+            {
+                salida = (Token)simbolos[i];
+                temp = (Token)simbolos[i-1];
+                temp2 = (Token)simbolos[i - 2];
+                if (salida.getToken() == 11 && temp.getToken() == 9)
+                {
+
+                    lexemas.Add(new Lexema(temp.getLexema(), temp2.getLexema()));
+                }
+            }
+
+        }
+
+        private void guardarConjuntos()
+        {
+            String nombre = "";
+            //Bandeara para saber si esta dentro de un conjunto o no
+            Boolean dentroC = false;
+            //Bandera para saber si es conjunto o macro
+            // macro = 0   CONJ: ID -> char ~ char ;
+            //conjunto = 1  CONJ: ID -> char,char,char ;
+            int tipo = 3;
+            Boolean ayuda = false;
+            Conjuntos temp = null;
+            Token salida;
+            Token temporal;
+            for (int i = 0; i < simbolos.Count; i++)
+            {
+                salida = (Token)simbolos[i];
+                if (salida.getToken() == 20)
+                {
+                    dentroC = true;
+                    //Determino el tipo
+                    temporal = (Token)simbolos[i+5];
+                    if (temporal.getToken() == 13)
+                    {
+                        tipo = 0;
+                        ayuda = false;
+                    }
+                    else if (temporal.getToken() == 12)
+                    {
+                        tipo = 1;
+                    }
+
+                }
+                else if (salida.getToken() == 5)
+                {
+                    nombre = salida.getLexema();
+
+                }
+                if (dentroC)
+                {
+                    //esta dentro tiene que evaluar entre los dos casos
+                    if (tipo == 0)
+                    {
+                        if (salida.getToken() == 13)
+                        {
+                            //Si es virgulilla ignora
+                            ayuda = true;
+                        }
+                        else if (salida.getToken() == 10)
+                        { //Si es punto y coma termino de guardar conjuntos
+                            dentroC = false;
+                        }
+                        else
+                        {//Debe guardar
+                            if (ayuda)
+                            {
+                                Conjuntos n = new Conjuntos(nombre);
+                                temporal = (Token)simbolos[i -2];
+                                n.llenar(temporal.getLexema()[0], salida.getLexema()[0]);
+                                conjuntos.Add(n);
+                                ayuda = false;
+                            }
+                        }
+                    }
+                    else if (tipo == 1)
+                    {
+
+                        if (salida.getToken() == 12)
+                        {
+                            //Si es coma ignora
+                        }
+                        else if (salida.getToken() == 10)
+                        { //Si es punto y coma termino de guardar conjuntos
+                            dentroC = false;
+                            conjuntos.Add(temp);
+
+                        }
+                        else if (salida.getToken() == 6)
+                        {
+                            ayuda = true;
+                            temp = new Conjuntos(nombre);
+
+                        }
+                        else
+                        {//Debe guardar
+                            if (ayuda)
+                            {
+                                temp.agregar(salida.getLexema()[0]);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        private void guardarER()
+        {
+            String name = "";
+            //Bandera si encontro un id donde si esta la ER
+            Boolean bandera = false;
+
+            ExpReg temp = null;
+            Token salida;
+            Token temporal;
+            Token temporal1;
+            Token temporal2;
+            for (int i = 0; i < simbolos.Count - 3; i++)
+            {
+                salida = (Token)simbolos[i];
+                if (salida.getToken() == 5)
+                {
+                    temporal = (Token)simbolos[i - 2];
+                    temporal1 = (Token)simbolos[i + 2];
+                    temporal2 = (Token)simbolos[i + 3];
+                    if (temporal.getToken() != 20 && temporal1.getToken() != 11 && temporal2.getToken() != 10 && !bandera)
+                    {
+                        name = salida.getLexema();
+                        bandera = true;
+                        i++;
+
+                        temp = new ExpReg(name);
+                    }
+                }
+                if (bandera)
+                {
+                    if (salida.getToken() == 10)
+                    {
+                        
+
+                        
+                        expresiones.Add(temp);
+
+                        bandera = false;
+
+                    }
+                    else
+                    {
+                        if (salida.getToken() == 3 || salida.getToken() == 4)
+                        {
+                            //ignora
+                        }
+                        else
+                        {
+                            temp.addToken(salida);
+
+                        }
+
+                    }
+                }
+            }
         }
 
         private Boolean isSymbol(char c)

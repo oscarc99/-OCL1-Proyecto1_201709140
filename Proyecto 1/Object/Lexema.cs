@@ -11,6 +11,9 @@ namespace Proyecto_1.Object
         string identificador;//nombres
         string cadena; //valor
         Boolean estado;
+        private string v1;
+        private string v2;
+
         public Lexema()
         {
 
@@ -21,6 +24,12 @@ namespace Proyecto_1.Object
             cadena = caden;
             estado = estad;
 
+        }
+
+        public Lexema(string cadena, string id)
+        {
+            this.identificador = id;
+            this.cadena = cadena;
         }
 
         public string getID()
