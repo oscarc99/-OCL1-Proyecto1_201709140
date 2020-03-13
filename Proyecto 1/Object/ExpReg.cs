@@ -13,9 +13,11 @@ namespace Proyecto_1.Object
         ArrayList tokens = new ArrayList();
         string Nombre;
         ArrayList lexemas = new ArrayList();
-        ArrayList thompson = new ArrayList();
+        ArrayList thompson = new ArrayList();//Ayuda para graficar lista de thompson
+        ArrayList thomp = new ArrayList();//ayuda para crear AFD lista de Thomp
         int conteo = 0;
         int iterador = 1;
+        int iteraE=0;
         public ExpReg()
         {
             conteo = 0;
@@ -63,9 +65,38 @@ namespace Proyecto_1.Object
             conteo = 0;
             iterador = 1;
             llenar();
+            tablaT();
             graficarThompson();
+            for (int i = 0; i < thomp.Count; i++)
+            {
+                Thomp te = (Thomp)thomp[i];
+                Console.WriteLine(te.getName()+" que apunta  a "+ te.getApuntadores()+" con "+ te.getTransicion());
+            }
         }
-        
+
+        private void tablaT()
+        {
+            Thompson final = (Thompson)thompson[thompson.Count - 1];
+            Thompson temp;
+            for (int i = 0; i < final.getFinal(); i++)
+            {
+                Thomp nuevo = new Thomp(i);
+                //Recorro la lista de thompson buscando uno por uno
+                for (int j = 0; j < thompson.Count; j++)
+                {
+                    temp = (Thompson)thompson[j];
+                    if(i == temp.getInicio())
+                    {
+                        nuevo.setTrans(temp.getTransicion());
+                        nuevo.add(temp.getFinal());
+
+                    }
+                }
+                thomp.Add(nuevo);
+            }
+            
+        }
+
         private string llenar()
         {
 
@@ -168,9 +199,34 @@ namespace Proyecto_1.Object
             }
             return " ";
         }
+        public void generarDFA()
+        {
+            ArrayList a = new ArrayList();
+            cerradura(a);
+        }
+
+        private void cerradura(ArrayList a)
+        {
+
+            int cuenta;//Para ver si ya se le recorrio 2 veces pasa al siguiente
+            int contador = 0;//Variable que ya recorrio todos los 
+            
+            
+            Estado estado = new Estado(iteraE);
+            while (true)
+            {
+                if(contador == thompson.Count)
+                {
+                    break;
+                }
+                
+                
+            }
+        }
 
         public void graficarThompson()
         {
+
             StreamWriter FilaRThtml = new StreamWriter(Nombre + "_AFN.dot");
             string afn="";
             afn += "digraph G { \n";

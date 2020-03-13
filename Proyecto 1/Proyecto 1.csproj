@@ -59,8 +59,10 @@
     <Compile Include="Object\Conjuntos.cs" />
     <Compile Include="Object\DFA.cs" />
     <Compile Include="Object\Errores.cs" />
+    <Compile Include="Object\Estado.cs" />
     <Compile Include="Object\ExpReg.cs" />
     <Compile Include="Object\Lexema.cs" />
+    <Compile Include="Object\Thomp.cs" />
     <Compile Include="Object\Thompson.cs" />
     <Compile Include="Object\Token.cs" />
     <Compile Include="Program.cs" />

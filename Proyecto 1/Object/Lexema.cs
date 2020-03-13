@@ -11,8 +11,7 @@ namespace Proyecto_1.Object
         string identificador;//nombres
         string cadena; //valor
         Boolean estado;
-        private string v1;
-        private string v2;
+
 
         public Lexema()
         {

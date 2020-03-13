@@ -1,0 +1,10 @@
+digraph G { 
+nodesep=0.8; 
+ranksep=0.5; 
+rankdir = LR; 
+node[shape = circle ]; 
+0->1 [ label = " a"]; 
+1->2 [ label = " b"]; 
+2->3 [ label = " c"]; 
+3->4 [ label = " d"]; 
+4[ shape = doublecircle];}

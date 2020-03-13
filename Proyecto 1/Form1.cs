@@ -24,6 +24,8 @@ namespace Proyecto_1
         ArrayList Lexemas = new ArrayList();
         ArrayList Conjuntos = new ArrayList();
         Lexico analizador = new Lexico();
+        int imageAFN = 0;
+        int imageAFD = 0;
 
 
         public Form1()
@@ -153,6 +155,15 @@ namespace Proyecto_1
 
                 generarThompson();
             }
+            //Colocar imagen inicial en el afn
+            ExpReg ex = (ExpReg)Expresiones[0];
+            picAFN.Image = Image.FromFile(ex.getNombre()+"_AFN.png");
+
+
+
+            //Colocar imagen inicial en el afd
+            //picAFD.Image = Image.FromFile(ex.getNombre() + "_AFD.png");
+
 
 
         }
@@ -429,6 +440,79 @@ namespace Proyecto_1
             }
             expresion.generarT();
             Console.WriteLine("");
+        }
+
+        private void splitContainer2_Panel1_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            //Siguiente AFD
+            if (imageAFD + 1 == Expresiones.Count)
+            {
+                imageAFD = 0;
+                ExpReg ex = (ExpReg)Expresiones[imageAFD];
+                picAFD.Image = Image.FromFile(ex.getNombre() + "_AFD.png");
+            }
+            else
+            {
+                imageAFD++;
+                ExpReg ex = (ExpReg)Expresiones[imageAFD];
+                picAFD.Image = Image.FromFile(ex.getNombre() + "_AFD.png");
+            }
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            //Siguiente AFN
+            if(imageAFN+1 == Expresiones.Count)
+            {
+                imageAFN = 0;
+                ExpReg ex = (ExpReg)Expresiones[imageAFN];
+                picAFN.Image = Image.FromFile(ex.getNombre() + "_AFN.png");
+            }
+            else
+            {
+                imageAFN++;
+                ExpReg ex = (ExpReg)Expresiones[imageAFN];
+                picAFN.Image = Image.FromFile(ex.getNombre() + "_AFN.png");
+            }
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            //Atras AFN
+            if (imageAFN ==0)
+            {
+                imageAFN = Expresiones.Count-1;
+                ExpReg ex = (ExpReg)Expresiones[imageAFN];
+                picAFN.Image = Image.FromFile(ex.getNombre() + "_AFN.png");
+            }
+            else
+            {
+                imageAFN--;
+                ExpReg ex = (ExpReg)Expresiones[imageAFN];
+                picAFN.Image = Image.FromFile(ex.getNombre() + "_AFN.png");
+            }
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            //Atras AFD
+            if (imageAFD == 0)
+            {
+                imageAFD = Expresiones.Count - 1;
+                ExpReg ex = (ExpReg)Expresiones[imageAFD];
+                picAFD.Image = Image.FromFile(ex.getNombre() + "_AFD.png");
+            }
+            else
+            {
+                imageAFD--;
+                ExpReg ex = (ExpReg)Expresiones[imageAFD];
+                picAFD.Image = Image.FromFile(ex.getNombre() + "_AFD.png");
+            }
         }
     }
 }

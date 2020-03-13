@@ -9,7 +9,7 @@ namespace Proyecto_1.Object
     class Errores
     {
         private string lexema;
-        private string tipo="";
+        private string tipo;
         private int columna;
         private int fila;
         
