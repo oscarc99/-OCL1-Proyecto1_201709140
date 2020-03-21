@@ -54,6 +54,15 @@ namespace Proyecto_1.Object
         {
             return this.columna;
         }
+
+        public Boolean Equals(Token t)
+        {
+            if(t.getToken()== token && t.getLexema().Equals(lexema))
+            {
+                return true;
+            }
+            return false;
+        }
     }
         
 

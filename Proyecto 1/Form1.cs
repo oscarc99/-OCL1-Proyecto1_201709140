@@ -153,11 +153,11 @@ namespace Proyecto_1
                     }
                 }
 
-                generarThompson();
+                //generarThompson();
             }
             //Colocar imagen inicial en el afn
             ExpReg ex = (ExpReg)Expresiones[0];
-            picAFN.Image = Image.FromFile(ex.getNombre()+"_AFN.png");
+            //picAFN.Image = Image.FromFile(ex.getNombre()+"_AFN.png");
 
 
 
@@ -399,6 +399,7 @@ namespace Proyecto_1
 
 
             }
+            
         }
 
         private void limpiarProgramaToolStripMenuItem_Click(object sender, EventArgs e)
@@ -438,8 +439,8 @@ namespace Proyecto_1
                 txtConsola.AppendText(tokA.getLexema());
                 Console.WriteLine(tokA.getLexema());
             }
-            expresion.generarT();
-            Console.WriteLine("");
+            //expresion.generarT();
+            
         }
 
         private void splitContainer2_Panel1_Paint(object sender, PaintEventArgs e)
