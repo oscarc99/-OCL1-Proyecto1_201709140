@@ -26,6 +26,7 @@ namespace Proyecto_1
         Lexico analizador = new Lexico();
         int imageAFN = 0;
         int imageAFD = 0;
+        int table = 0;
 
 
         public Form1()
@@ -65,7 +66,7 @@ namespace Proyecto_1
         {
             TabPage current_tab = tabControl1.SelectedTab;
             ListaPesta.Remove(current_tab);
-            tabControl1.TabPages.Remove(current_tab);
+            tabControl1.TabPages.Remove(current_tab);   
             contarpesta--;
         }
 
@@ -82,7 +83,7 @@ namespace Proyecto_1
         private void toolStripMenuItem2_Click(object sender, EventArgs e)
         {
             TabPage current_tab = tabControl1.SelectedTab;
-            Console.WriteLine(current_tab.Text);
+            //Console.WriteLine(current_tab.Text);
 
             txtConsola.AppendText("a");
 
@@ -95,7 +96,7 @@ namespace Proyecto_1
             string name = "";
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
             {
-                Console.WriteLine(openFileDialog1.FileName);
+                //Console.WriteLine(openFileDialog1.FileName);
                 List<string> lines = File.ReadAllLines(openFileDialog1.FileName).ToList();
                 foreach (string line in lines)
                 {
@@ -149,14 +150,14 @@ namespace Proyecto_1
                         Lexemas.AddRange(analizador.getLexemas());
                         Expresiones.AddRange(analizador.getExpresiones());
                         Conjuntos.AddRange(analizador.getConjuntos());
-
+                        Console.WriteLine("");
                     }
                 }
 
                 //generarThompson();
             }
             //Colocar imagen inicial en el afn
-            ExpReg ex = (ExpReg)Expresiones[0];
+            //ExpReg ex = (ExpReg)Expresiones[0];
             //picAFN.Image = Image.FromFile(ex.getNombre()+"_AFN.png");
 
 
@@ -366,7 +367,7 @@ namespace Proyecto_1
             txtConsola.AppendText("--------------------------- \n");
             for (int i = 0; i < Conjuntos.Count; i++)
             {
-                Conjuntos temp = (Conjuntos)Conjuntos[i];
+                Conjunto temp = (Conjunto)Conjuntos[i];
                 txtConsola.AppendText("Nombre: " + temp.getNombre() + " ");
                 for (int j = 0; j < temp.getConjunt().Count; j++)
                 {
@@ -399,7 +400,7 @@ namespace Proyecto_1
 
 
             }
-            
+
         }
 
         private void limpiarProgramaToolStripMenuItem_Click(object sender, EventArgs e)
@@ -412,35 +413,194 @@ namespace Proyecto_1
 
         private void analizarLexemasToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            ExpReg expresion = new ExpReg("Examen");
-            Token tok = new Token("Prueba", 5, "ID");
-            Token tok1 = new Token(".", 16, "conca");
-            Token tok2 = new Token("|", 17, "CADENA");
-            Token tok3 = new Token("a", 5, "ciclo");
-            Token tok4 = new Token("b", 5, "OR");
-            Token tok5 = new Token("*", 15, "ID");
-            Token tok6 = new Token("c", 11, "CADENA");
+            bool encontroCadena;//Ya no sigue evaluando si encuentra conjunto 
 
-            
-            
-            expresion.addToken(tok);
-
-            expresion.addToken(tok1);
-            expresion.addToken(tok2);
-            expresion.addToken(tok3);
-            expresion.addToken(tok4);
-            expresion.addToken(tok5);
-            expresion.addToken(tok6);
-            
-            //expresion.addToken(tok3);
-            for (int i =0; i < expresion.getTokens().Count; i++)
+            bool encontro;//Si no encuentra match ya no sigue evaluando
+            bool encontroEsp;//Ya no sigue evaluando si encuentra cadena 
+            bool exist; //Si no existe no evalua 
+            ExpReg exp; //Expresion regular que nos ayudara a evaluar
+            int estado;//Maneja los moviminetos de los estados
+            Estado est = null;//Estado en el que esta  
+            //Analizo todas los lexemas guardados 
+            foreach (Lexema lex in Lexemas)
             {
-                Token tokA = (Token)expresion.getTokens()[i];
-                txtConsola.AppendText(tokA.getLexema());
-                Console.WriteLine(tokA.getLexema());
+                //Reinicia variables para la evaluacion
+                encontroCadena = false;
+                encontro = true;
+                encontroEsp = false;
+                exp = null;
+                est = null;
+                estado = 0;
+                exist = false;
+                //Busco si existe la ER
+                foreach (ExpReg er in Expresiones)
+                {
+                    //Guarda en exp la ultima expresion regular con el nombre del lexema
+                    if (er.getNombre().Equals(lex.getID()))
+                    {
+                        exist = true;
+                        exp = er;
+
+                    }
+                }
+                if (exist)
+                {//Si existe entonces evalua
+                    //Obtiene los caracteres del lexema a evaluar
+                    char[] caracteres = lex.getCadena().ToCharArray();
+                    //Recorre todos los caracteres
+                    for (int i = 0; i < caracteres.Length; i++)
+                    {
+                        encontroCadena = false;
+                        
+                        encontroEsp = false;
+                        if (encontro)
+                        {
+                            //Cambio de estado para evaluar cada char
+                            est = exp.getEstado(estado);
+                            //Busco si tiene transicion con alguna cadena
+                            //Forma la cadena si se mueve no reviso los conjuntos 
+                            //Recorro los terminales de ese estado
+                            for (int j = 0; j < est.getTeminales().Count; j++)
+                            {
+                                Token tok = (Token)est.getTeminales()[j];
+                                if (tok.getToken() == 23  && caracteres[i] == 10)//salto de linea
+                                {
+                                    estado = est.getTransicion()[j];
+                                    encontroEsp = true;
+                                    
+                                    break;
+                                }
+                                else if (tok.getToken() == 24 && caracteres[i] == 10)//Tabulacion
+                                {
+                                    estado = est.getTransicion()[j];
+                                    encontroEsp = true;
+                                    
+                                    break;
+                                }
+                                else if (tok.getToken() == 25 && caracteres[i] == 39)//comilla simples
+                                {
+                                    estado = est.getTransicion()[j];
+                                    encontroEsp = true;
+                                    
+                                    break;
+                                }
+                                else if (tok.getToken() == 26 && caracteres[i] == 92  && caracteres[i+1] == 34)//salto de linea
+                                {
+                                    estado = est.getTransicion()[j];
+                                    encontroEsp = true;
+                                    
+                                    i++;
+                                    break;
+                                }
+
+                            }
+                            //
+
+                            
+                            if (!encontroEsp)//No encontro cadena busca en conjunto
+                            {
+                                //
+                                for (int j = 0; j < est.getTeminales().Count; j++)
+                                {
+                                    Token tok = (Token)est.getTeminales()[j];
+                                    //Si el termna es cadea y tiene transicion 
+                                    if (tok.getToken() == 11 && est.getTransicion()[j] >= 0)//evaluo
+                                    {
+                                        //Se obtiene el tamaño de la cadena del temrinal
+                                        int tamaño = tok.getLexema().Length;
+                                        string cadena = "";
+                                        if (tamaño + i <= caracteres.Length)
+                                        {
+                                            for (int k = 0; k < tamaño; k++)
+                                            {
+                                                cadena += caracteres[i + k];
+                                            }
+                                            if (cadena.Equals(tok.getLexema()))
+                                            {
+                                                estado = est.getTransicion()[j];
+                                                i = i + tamaño;
+                                                encontroCadena = true;
+                                                break;
+                                            }
+                                        }
+
+
+                                    }
+
+                                }
+                                
+
+
+
+                            }
+                            if (!encontroCadena && !encontroEsp)
+                            {
+                                //caracteres especiales
+                                //Si no se mueve busco en los conjuntos
+                                Conjunto con = getConj(caracteres[i]);
+                                //Recorro los terminales de ese estado
+                                if (con != null)
+                                {
+                                    for (int j = 0; j < est.getTeminales().Count; j++)
+                                    {
+
+                                        Token tok = (Token)est.getTeminales()[j];
+                                        //Si no es terminal y si tiene transicion evalua 
+                                        if (tok.getToken() == 5 && est.getTransicion()[j] >= 0)
+                                        {
+                                            if (tok.getLexema().Equals(con.getNombre()))
+                                            {
+                                                estado = est.getTransicion()[j];
+
+                                                break;
+                                            }
+                                        }
+                                        else if (j == est.getTeminales().Count - 1) encontro = false;
+
+                                    }
+                                }
+
+                                //Si no encuentra caracter especial detiene por completo la evaluacion del lexema bandera = false;
+                            }
+                        }
+                    }
+
+
+
+
+
+
+
+                    //Reviso si el estado que termino es de aceptacion 
+                    //Si es le cambio el estado
+                    if (exp.getEstado(estado).getAceptacion())
+                    {
+                        lex.setEstado(true);
+                    }
+
+                }
+                else
+                {
+                    Console.WriteLine(lex.getID() + " No existe su ER");
+                }
+
+
+
             }
-            //expresion.generarT();
-            
+            htmlLex();
+            xmlLex();
+        }
+
+        private Conjunto getConj(char c)
+        {
+            foreach (Conjunto item in Conjuntos)
+            {
+                if (item.pertenece(c))
+                {
+                    return item;
+                }
+            }
+            return null;
         }
 
         private void splitContainer2_Panel1_Paint(object sender, PaintEventArgs e)
@@ -455,12 +615,14 @@ namespace Proyecto_1
             {
                 imageAFD = 0;
                 ExpReg ex = (ExpReg)Expresiones[imageAFD];
+                afd.Text = ex.getNombre();
                 picAFD.Image = Image.FromFile(ex.getNombre() + "_AFD.png");
             }
             else
             {
                 imageAFD++;
                 ExpReg ex = (ExpReg)Expresiones[imageAFD];
+                afd.Text = ex.getNombre();
                 picAFD.Image = Image.FromFile(ex.getNombre() + "_AFD.png");
             }
         }
@@ -468,16 +630,18 @@ namespace Proyecto_1
         private void button3_Click(object sender, EventArgs e)
         {
             //Siguiente AFN
-            if(imageAFN+1 == Expresiones.Count)
+            if (imageAFN + 1 == Expresiones.Count)
             {
                 imageAFN = 0;
                 ExpReg ex = (ExpReg)Expresiones[imageAFN];
+                afn.Text = ex.getNombre();
                 picAFN.Image = Image.FromFile(ex.getNombre() + "_AFN.png");
             }
             else
             {
                 imageAFN++;
                 ExpReg ex = (ExpReg)Expresiones[imageAFN];
+                afn.Text = ex.getNombre();
                 picAFN.Image = Image.FromFile(ex.getNombre() + "_AFN.png");
             }
         }
@@ -485,16 +649,18 @@ namespace Proyecto_1
         private void button4_Click(object sender, EventArgs e)
         {
             //Atras AFN
-            if (imageAFN ==0)
+            if (imageAFN == 0)
             {
-                imageAFN = Expresiones.Count-1;
+                imageAFN = Expresiones.Count - 1;
                 ExpReg ex = (ExpReg)Expresiones[imageAFN];
+                afn.Text = ex.getNombre();
                 picAFN.Image = Image.FromFile(ex.getNombre() + "_AFN.png");
             }
             else
             {
                 imageAFN--;
                 ExpReg ex = (ExpReg)Expresiones[imageAFN];
+                afn.Text = ex.getNombre();
                 picAFN.Image = Image.FromFile(ex.getNombre() + "_AFN.png");
             }
         }
@@ -506,14 +672,81 @@ namespace Proyecto_1
             {
                 imageAFD = Expresiones.Count - 1;
                 ExpReg ex = (ExpReg)Expresiones[imageAFD];
+                afd.Text = ex.getNombre();
                 picAFD.Image = Image.FromFile(ex.getNombre() + "_AFD.png");
             }
             else
             {
                 imageAFD--;
                 ExpReg ex = (ExpReg)Expresiones[imageAFD];
+                afd.Text = ex.getNombre();
                 picAFD.Image = Image.FromFile(ex.getNombre() + "_AFD.png");
             }
+        }
+
+        private ArrayList getConjunto(string nombre)
+        {
+            foreach (Conjunto conj in Conjuntos)
+            {
+                if (conj.getNombre().Equals(nombre))
+                {
+                    return conj.getConjunt();
+                }
+            }
+            return null;
+        }
+
+        private void reporteLexemasToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            System.Diagnostics.Process.Start("RLexemas.html");
+            System.Diagnostics.Process.Start("RLexemas.xml");
+            
+        }
+
+        private void button5_Click(object sender, EventArgs e)
+        {
+            //Atras Tabla
+            if (table == 0)
+            {
+                table = Expresiones.Count - 1;
+                
+                ExpReg ex = (ExpReg)Expresiones[table];
+                tabla.Text = ex.getNombre();
+                picTable.Image = Image.FromFile(ex.getNombre() + "_TABLE.png");
+            }
+            else
+            {
+                table--;
+                
+                ExpReg ex = (ExpReg)Expresiones[table];
+                tabla.Text = ex.getNombre();
+                picTable.Image = Image.FromFile(ex.getNombre() + "_TABLE.png");
+            }
+        }
+
+        private void button6_Click(object sender, EventArgs e)
+        {
+            //Siguiente tabla
+            if (table + 1 == Expresiones.Count)
+            {
+                table = 0;
+                ExpReg ex = (ExpReg)Expresiones[table];
+                tabla.Text = ex.getNombre();
+                picTable.Image = Image.FromFile(ex.getNombre() + "_TABLE.png");
+            }
+            else
+            {
+                table++;
+                
+                ExpReg ex = (ExpReg)Expresiones[table];
+                tabla.Text = ex.getNombre();
+                picTable.Image = Image.FromFile(ex.getNombre() + "_TABLE.png");
+            }
+        }
+
+        private void picAFN_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

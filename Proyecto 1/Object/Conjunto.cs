@@ -7,16 +7,16 @@ using System.Threading.Tasks;
 
 namespace Proyecto_1.Object
 {
-    class Conjuntos
+    class Conjunto
     {
         String Nombre;
         ArrayList conjunto = new ArrayList();
 
-        public Conjuntos()
+        public Conjunto()
         {
         }
 
-        public Conjuntos(String Nombre)
+        public Conjunto(String Nombre)
         {
             this.Nombre = Nombre;
         }
@@ -54,6 +54,21 @@ namespace Proyecto_1.Object
         {
             int ca = c;
             conjunto.Add(ca);
+        }
+
+        public void add(int c)
+        {
+            conjunto.Add(c);
+        }
+
+        public bool pertenece(char c)
+        {
+            int caraceter = c;
+            for (int i = 0; i < conjunto.Count; i++)
+            {
+                if ((int)conjunto[i] == caraceter) return true;
+            }
+            return false;
         }
     }
 }

@@ -56,7 +56,7 @@
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
-    <Compile Include="Object\Conjuntos.cs" />
+    <Compile Include="Object\Conjunto.cs" />
     <Compile Include="Object\DFA.cs" />
     <Compile Include="Object\Errores.cs" />
     <Compile Include="Object\Estado.cs" />

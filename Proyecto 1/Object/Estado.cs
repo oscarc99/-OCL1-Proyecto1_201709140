@@ -9,7 +9,7 @@ namespace Proyecto_1.Object
 {
     class Estado
     {
-        int[] transicion;
+        int[] transicion;//Tabla
         string nombre;
         int name;
         int fin = -1;
@@ -17,7 +17,7 @@ namespace Proyecto_1.Object
         string conjunto = "";
         string inicial="";
         ArrayList conjunt = new ArrayList();
-        ArrayList transiciones = new ArrayList();//Para crear la tabla de transiciones, todos los terminales y a que estado se va
+        ArrayList terminales = new ArrayList();//Terminales
         public Estado(int nam, ArrayList tras, int final)
         {
             transicion = new int[tras.Count];
@@ -30,9 +30,12 @@ namespace Proyecto_1.Object
             name = nam;
             conjunto = "";
             conjunt = new ArrayList();
-            transiciones = tras;
+            terminales = tras;
             aceptacion = false;
         }
+
+     
+
         public void setInicial(string x)
         {
             inicial = x;
@@ -60,9 +63,9 @@ namespace Proyecto_1.Object
         {
             return conjunt;
         }
-        public ArrayList getTrans()
+        public ArrayList getTeminales()
         {
-            return transiciones;
+            return terminales;
         }
         public void setTraslado(int posicion, int estado)
         {
@@ -72,7 +75,7 @@ namespace Proyecto_1.Object
 
         public Estado(string nam, ArrayList tras)
         {
-            transiciones = tras;
+            terminales = tras;
             transicion = new int[tras.Count];
             for (int i = 0; i < transicion.Length; i++)
             {
@@ -83,9 +86,9 @@ namespace Proyecto_1.Object
             conjunto = "";
             conjunt = new ArrayList();
         }
-        public Estado(string nam, ArrayList conj, ArrayList tras)
+        public Estado(string nam, ArrayList conj, ArrayList terminal)
         {
-            transiciones = tras;
+            terminales = terminal;
             conjunt = conj;
             name = Int16.Parse(nam);
             nombre = nam;

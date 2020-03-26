@@ -31,6 +31,10 @@ namespace Proyecto_1.Object
             this.cadena = cadena;
         }
 
+        public void setEstado(bool a)
+        {
+            estado = a;
+        }
         public string getID()
         {
             return identificador;

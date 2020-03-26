@@ -22,6 +22,24 @@ namespace Proyecto_1.Object
         String aux = "";//auxiliar para obtener lista de estados
         int fin = -2;
 
+        public ArrayList getTerminales()
+        {
+            return terminales;
+        }
+        public ArrayList getEstados()
+        {
+            return estados;
+        }
+
+        public Estado getEstado(int name)
+        {
+            foreach (Estado est in estados)
+            {
+                if (est.getNombre() == name) return est;
+            }
+            return null;
+        }
+
         public ExpReg()
         {
             conteo = 0;
@@ -76,13 +94,17 @@ namespace Proyecto_1.Object
             graficarThompson();
             generarDFA();
             //imprimirTerminales();
-            graficarDFA();
+            graficarAFD();
             graficarTabla();
 
 
         }
 
+        public bool analizarLex(string cadena)
+        {
 
+            return false;
+        }
 
         private void imprimirTerminales()
         {
@@ -288,10 +310,10 @@ namespace Proyecto_1.Object
                         string[] arr = x.Split(',');
                         string ayuda = "";
                          
-                        Console.WriteLine(Nombre);
-                        Console.WriteLine(est.getConjunto());
-                        Console.WriteLine(item.getLexema());
-                        Console.WriteLine(x);
+                        //Console.WriteLine(Nombre);
+                        //Console.WriteLine(est.getConjunto());
+                        //Console.WriteLine(item.getLexema());
+                        //Console.WriteLine(x);
                         
 
                         for (int j = 0; j < arr.Length; j++)
@@ -400,13 +422,20 @@ namespace Proyecto_1.Object
             {
                 Estado est = (Estado)estados[i];
                 Console.WriteLine(est.getName() + " - " + est.getNombre());
-                for (int j = 0; j < est.getTrans().Count; j++)
+                for (int j = 0; j < est.getTeminales().Count; j++)
                 {
-                    Token temp = (Token)est.getTrans()[j];
+                    Token temp = (Token)est.getTeminales()[j];
                     Console.WriteLine(temp.getLexema());
                 }
             }
         }
+
+
+        private void cerrar(int x, string traslado)
+        {
+
+        }
+
 
 
         private void cerradura(int x, string traslado)
@@ -416,9 +445,21 @@ namespace Proyecto_1.Object
             {
                 if (item.getInicio() == x && item.getTransicion().Equals(traslado))
                 {
-
-                    aux += "," + item.getFinal();
-                    cerradura(item.getFinal(), "ε");
+                    bool bandera = false;
+                    string[] arr = aux.Split(',');
+                    for (int i = 0; i < arr.Length; i++)
+                    {
+                        if (item.getFinal().ToString().Equals(arr[i]))
+                        {
+                            bandera = true;
+                        }
+                    }
+                    if (!bandera)
+                    {
+                        aux += "," + item.getFinal();
+                        cerradura(item.getFinal(), "ε");
+                    }
+                    
                 }
             }
 
@@ -468,6 +509,50 @@ namespace Proyecto_1.Object
 
         }
 
+        private void graficarAFD() 
+        {
+            StreamWriter FilaRThtml = new StreamWriter(Nombre + "_AFD.dot");
+            string afd = "";
+            afd += "digraph G { \n";
+            afd += "nodesep=0.8; \n";
+            afd += "ranksep=0.5; \n";
+            afd += "rankdir = LR; \n";
+            afd += "node[shape = circle ]; \n";
+            foreach (Estado est in estados)
+            {
+                if (est.getAceptacion())
+                {
+                    afd += est.getNombre() + "[label= \" " + est.getName() + "\" shape = doublecircle]; \n";
+                }
+                else
+                {
+                    afd += est.getNombre() + "[label= \" " + est.getName() + "\"]; \n";
+                }
+                
+                for (int i = 0; i < terminales.Count; i++)
+                {
+                    Token tok = (Token)terminales[i];
+                    if (est.getTransicion()[i] >= 0)
+                    {
+                        afd += est.getNombre() + "->" + est.getTransicion()[i] + "[label= \"" + tok.getLexema() + "\"]; \n";
+                    }
+                }
+            }
+            afd += "}";
+            FilaRThtml.Write(afd);
+            FilaRThtml.Close();
+            System.Diagnostics.ProcessStartInfo procStartInfo = new System.Diagnostics.ProcessStartInfo("cmd", "/c dot -Tpng -o " + Nombre + "_AFD.png " + Nombre + "_AFD.dot");
+            // Indicamos que la salida del proceso se redireccione en un Stream
+            procStartInfo.RedirectStandardOutput = true;
+            procStartInfo.UseShellExecute = false;
+            //Indica que el proceso no despliegue una pantalla negra (El proceso se ejecuta en background)
+            procStartInfo.CreateNoWindow = false;
+            //Inicializa el proceso
+            System.Diagnostics.Process proc = new System.Diagnostics.Process();
+            proc.StartInfo = procStartInfo;
+            proc.Start();
+        }
+
         private void graficarTabla()
         {
             StreamWriter FilaRThtml = new StreamWriter(Nombre + "_TABLE.dot");
@@ -478,7 +563,7 @@ namespace Proyecto_1.Object
             table += "node_A[shape = record  label = \" {Estado";
             foreach (Estado est in estados)
             {
-                table += "|" +est.getName();
+                table += "|" + est.getName();
             }
             table += "}";
             for (int i = 0; i < terminales.Count; i++)
@@ -504,46 +589,6 @@ namespace Proyecto_1.Object
             FilaRThtml.Write(table);
             FilaRThtml.Close();
             System.Diagnostics.ProcessStartInfo procStartInfo = new System.Diagnostics.ProcessStartInfo("cmd", "/c dot -Tpng -o " + Nombre + "_TABLE.png " + Nombre + "_TABLE.dot");
-            // Indicamos que la salida del proceso se redireccione en un Stream
-            procStartInfo.RedirectStandardOutput = true;
-            procStartInfo.UseShellExecute = false;
-            //Indica que el proceso no despliegue una pantalla negra (El proceso se ejecuta en background)
-            procStartInfo.CreateNoWindow = false;
-            //Inicializa el proceso
-            System.Diagnostics.Process proc = new System.Diagnostics.Process();
-            proc.StartInfo = procStartInfo;
-            proc.Start();
-        }
-
-        private void graficarDFA()
-        {
-            StreamWriter FilaRThtml = new StreamWriter(Nombre + "_AFN.dot");
-            string afd = "";
-            afd += "digraph G { \n";
-            afd += "nodesep=0.8; \n";
-            afd += "ranksep=0.5; \n";
-            afd += "rankdir = LR; \n";
-            afd += "node[shape = circle ]; \n";
-            for (int i = 0; i < thompson.Count; i++)
-            {
-                Thompson temp = (Thompson)thompson[i];
-                afd += temp.getInicio() + "->" + temp.getFinal() + " [ label = \" " + temp.getTransicion() + "\"]; \n";
-                if (i == thompson.Count - 1)
-                {
-                    if (temp.getInicio() > temp.getFinal())
-                    {
-                        afd += temp.getInicio() + "[ shape = doublecircle];";
-                    }
-                    else
-                    {
-                        afd += temp.getFinal() + "[ shape = doublecircle];";
-                    }
-                }
-            }
-            afd += "}";
-            FilaRThtml.Write(afd);
-            FilaRThtml.Close();
-            System.Diagnostics.ProcessStartInfo procStartInfo = new System.Diagnostics.ProcessStartInfo("cmd", "/c dot -Tpng -o " + Nombre + "_AFN.png " + Nombre + "_AFN.dot");
             // Indicamos que la salida del proceso se redireccione en un Stream
             procStartInfo.RedirectStandardOutput = true;
             procStartInfo.UseShellExecute = false;

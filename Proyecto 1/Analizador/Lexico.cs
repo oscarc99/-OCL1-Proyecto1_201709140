@@ -148,9 +148,34 @@ namespace Proyecto_1.Analizador
 
                         else if (chars[i].Equals('['))
                         {
-                            estado = 7;
-                            auxLex += chars[i];
-                            columna++;
+                            
+                            if (chars[i + 1].Equals(':'))
+                            {
+                                estado = 7;
+                                //auxLex += chars[i];
+                                columna++;
+                            }
+                            else
+                            {
+                                if (chars[i + 1] == '~' || chars[i + 1] == ';' || chars[i + 1] == ',')
+                                {
+
+
+                                    simbolos.Add(new Token("[", 21, "Simbolo", fila, columna));
+                                    auxLex = "";
+                                    estado = 0;
+
+                                }
+                                else
+                                {
+
+                                    errores.Add(new Errores(auxLex, columna, fila));
+                                    auxLex = "";
+                                    estado = 0;
+
+
+                                }
+                            }
                         }
                         else if (chars[i].Equals(':'))
                         {
@@ -320,7 +345,7 @@ namespace Proyecto_1.Analizador
                         else if (chars[i].Equals('\"'))
                         {
                             auxLex += chars[i];
-                            simbolos.Add(new Token(auxLex, 23, "Comillas Dobles", fila, columna));
+                            simbolos.Add(new Token(auxLex, 26, "Comillas Dobles", fila, columna));
                             estado = 0;
                             auxLex = "";
                             columna++;
@@ -328,7 +353,7 @@ namespace Proyecto_1.Analizador
                         else if (chars[i].Equals('t'))
                         {
                             auxLex += chars[i];
-                            simbolos.Add(new Token(auxLex, 23, "Tabulacion", fila, columna));
+                            simbolos.Add(new Token(auxLex, 24, "Tabulacion", fila, columna));
                             estado = 0;
                             auxLex = "";
                             columna++;
@@ -422,30 +447,19 @@ namespace Proyecto_1.Analizador
                         if (chars[i].Equals(':'))
                         {
                             estado = 11;
-                            auxLex += chars[i];
+                            //auxLex += chars[i];
                         }
                         else
                         {
                             
                             columna++;
-                            if (chars[i + 1] == '~' || chars[i + 1] == ';' || chars[i + 1] == ',')
-                            {
+                            errores.Add(new Errores(auxLex, columna, fila));
+                            auxLex = "";
+                            estado = 0;
+                            i--;
 
 
-                                simbolos.Add(new Token(auxLex, 21, "Simbolo", fila, columna));
-                                auxLex = "";
-                                estado = 0;
-
-                            }
-                            else
-                            {
-                                
-                                    errores.Add(new Errores(auxLex, columna, fila));
-                                    auxLex = "";
-                                estado = 0;
-
-
-                            }
+                            
                         }
 
 
@@ -487,7 +501,7 @@ namespace Proyecto_1.Analizador
                         break;
 
                     case 9:
-                        if (chars[i] == '"')
+                        if (chars[i] == '"' && chars[i-1]!='\\')
                         {
                             simbolos.Add(new Token(auxLex, 11, "Lexema/Cadena", fila, columna));
                             auxLex = "";
@@ -520,81 +534,23 @@ namespace Proyecto_1.Analizador
                         }
                         break;
                     case 11:
-                        if (chars[i].Equals('t'))
-                        {
-                            auxLex += chars[i];
-                            estado = 12;
-                            columna++;
-                        }
-                        else
-                        {
-                            errores.Add(new Errores(auxLex, columna, fila));
-                            auxLex = "";
-                            i--;
-                        }
-                        break;
-                    case 12:
-                        if (chars[i].Equals('o'))
-                        {
-                            auxLex += chars[i];
-                            estado = 12;
-                            columna++;
-                        }
-                        else
-                        {
-                            errores.Add(new Errores(auxLex, columna, fila));
-                            auxLex = "";
-                            i--;
-
-                        }
-                        break;
-                    case 13:
-                        if (chars[i].Equals('d'))
-                        {
-                            auxLex += chars[i];
-                            estado = 12;
-                            columna++;
-                        }
-                        else
-                        {
-                            errores.Add(new Errores(auxLex, columna, fila));
-                            auxLex = "";
-                            i--;
-                        }
-                        break;
-                    case 14:
-                        if (chars[i].Equals('o'))
-                        {
-                            auxLex += chars[i];
-                            estado = 12;
-                            columna++;
-                        }
-                        else
-                        {
-                            errores.Add(new Errores(auxLex, columna, fila));
-                            auxLex = "";
-                            i--;
-                        }
-                        break;
-
-                    case 15:
                         if (chars[i].Equals(':'))
                         {
-                            auxLex += chars[i];
-                            estado = 12;
+                            //auxLex += chars[i];
+                            estado = 16;
                             columna++;
                         }
                         else
                         {
-                            errores.Add(new Errores(auxLex, columna, fila));
-                            auxLex = "";
-                            i--;
+                            auxLex += chars[i];
                         }
                         break;
+                        
+                    
                     case 16:
                         if (chars[i].Equals(']'))
                         {
-                            auxLex += chars[i];
+                            //auxLex += chars[i];
                             simbolos.Add(new Token(auxLex, 27, "Lo que sea", fila, columna));
                             columna++;
                             estado = 0;
@@ -604,9 +560,8 @@ namespace Proyecto_1.Analizador
                         }
                         else
                         {
-                            errores.Add(new Errores(auxLex, columna, fila));
-                            auxLex = "";
-                            i--;
+                            auxLex += chars[i];
+                            estado = 11;
                         }
                         break;
                 }
@@ -646,7 +601,7 @@ namespace Proyecto_1.Analizador
                 if (salida.getToken() == 11 && temp.getToken() == 9)
                 {
 
-                    lexemas.Add(new Lexema(temp.getLexema(), temp2.getLexema()));
+                    lexemas.Add(new Lexema(salida.getLexema(), temp2.getLexema()));
                 }
             }
 
@@ -660,10 +615,12 @@ namespace Proyecto_1.Analizador
             //Bandera para saber si es conjunto o macro
             // macro = 0   CONJ: ID -> char ~ char ;
             //conjunto = 1  CONJ: ID -> char,char,char ;
+            //conjunto = 
             int tipo = 3;
             Boolean ayuda = false;
-            Conjuntos temp = null;
+            Conjunto temp = null;
             Token salida;
+            Token t=null;
             Token temporal;
             for (int i = 0; i < simbolos.Count; i++)
             {
@@ -673,6 +630,7 @@ namespace Proyecto_1.Analizador
                     dentroC = true;
                     //Determino el tipo
                     temporal = (Token)simbolos[i+5];
+                    t = (Token)simbolos[i +4];
                     if (temporal.getToken() == 13)
                     {
                         tipo = 0;
@@ -681,6 +639,9 @@ namespace Proyecto_1.Analizador
                     else if (temporal.getToken() == 12)
                     {
                         tipo = 1;
+                    }else if (t.getToken() == 27)
+                    {
+                        tipo = 2;
                     }
 
                 }
@@ -707,7 +668,7 @@ namespace Proyecto_1.Analizador
                         {//Debe guardar
                             if (ayuda)
                             {
-                                Conjuntos n = new Conjuntos(nombre);
+                                Conjunto n = new Conjunto(nombre);
                                 temporal = (Token)simbolos[i -2];
                                 n.llenar(temporal.getLexema()[0], salida.getLexema()[0]);
                                 conjuntos.Add(n);
@@ -731,16 +692,50 @@ namespace Proyecto_1.Analizador
                         else if (salida.getToken() == 6)
                         {
                             ayuda = true;
-                            temp = new Conjuntos(nombre);
+                            temp = new Conjunto(nombre);
 
                         }
                         else
                         {//Debe guardar
                             if (ayuda)
                             {
-                                temp.agregar(salida.getLexema()[0]);
+                                if (salida.getToken() == 23)//salto de linea
+                                {
+                                    temp.add(10);
+                                }
+                                else if (salida.getToken() == 24)//tabulacion
+                                {
+                                    temp.add(9);
+                                }
+                                else if (salida.getToken() == 25)//comilla simples
+                                {
+                                    temp.add(39);
+                                }
+                                else if (salida.getToken() == 26)//comillas dobles
+                                {
+                                    temp.add(34);
+                                }
+                                else
+                                {
+                                    temp.agregar(salida.getLexema()[0]);
+                                }
+                                
                             }
                         }
+                    }else if(tipo == 2)
+                    {
+                        char[] arr = t.getLexema().ToArray();
+                        //Guarde y sali
+                        t = (Token)simbolos[i+2];
+                        nombre = t.getLexema();
+                        Conjunto n = new Conjunto(nombre);
+                        
+                        foreach (char item in arr)
+                        {
+                            n.agregar(item);
+                        }
+                        conjuntos.Add(n);
+                        dentroC = false;
                     }
                 }
             }
