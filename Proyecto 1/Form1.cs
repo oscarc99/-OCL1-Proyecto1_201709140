@@ -66,7 +66,7 @@ namespace Proyecto_1
         {
             TabPage current_tab = tabControl1.SelectedTab;
             ListaPesta.Remove(current_tab);
-            tabControl1.TabPages.Remove(current_tab);   
+            tabControl1.TabPages.Remove(current_tab);
             contarpesta--;
         }
 
@@ -111,60 +111,68 @@ namespace Proyecto_1
 
         private void analizarDocumentoToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            ArrayList tempT = new ArrayList();
-            Control controlBox;
-
-            if (tabControl1.SelectedTab.HasChildren)
+            try
             {
-                string nombres = tabControl1.SelectedTab.Text;
-                string[] a = nombres.Split('.');
-                nombres = a[0];
-                foreach (Control item in tabControl1.SelectedTab.Controls)
+                ArrayList tempT = new ArrayList();
+                Control controlBox;
+
+                if (tabControl1.SelectedTab.HasChildren)
                 {
-                    controlBox = item;
-                    if (controlBox is RichTextBox)
+                    string nombres = tabControl1.SelectedTab.Text;
+                    string[] a = nombres.Split('.');
+                    nombres = a[0];
+                    foreach (Control item in tabControl1.SelectedTab.Controls)
                     {
-                        analizador.escanear(controlBox.Text, tabControl1.SelectedTab.Text);
-                        tempT = analizador.getSimbolos();
-                        //Genera el html de los reportes
-                        StreamWriter FilaRThtml = new StreamWriter(nombres + "RT.html");
-                        FilaRThtml.Write(htmlRT(tempT));
-                        FilaRThtml.Close();
-                        //XML tokens
-                        StreamWriter FileXMLT = new StreamWriter(nombres + "RT.xml");
-                        FileXMLT.Write(xmlRT(tempT));
-                        FileXMLT.Close();
+                        controlBox = item;
+                        if (controlBox is RichTextBox)
+                        {
+                            analizador.escanear(controlBox.Text, tabControl1.SelectedTab.Text);
+                            tempT = analizador.getSimbolos();
+                            //Genera el html de los reportes
+                            StreamWriter FilaRThtml = new StreamWriter(nombres + "RT.html");
+                            FilaRThtml.Write(htmlRT(tempT));
+                            FilaRThtml.Close();
+                            //XML tokens
+                            StreamWriter FileXMLT = new StreamWriter(nombres + "RT.xml");
+                            FileXMLT.Write(xmlRT(tempT));
+                            FileXMLT.Close();
 
-                        //Genera el html de los errores
+                            //Genera el html de los errores
 
-                        tempT = analizador.getErrores();
-                        StreamWriter FilaEThtml = new StreamWriter(nombres + "RE.html");
-                        FilaEThtml.Write(htmlRE(tempT));
-                        FilaEThtml.Close();
+                            tempT = analizador.getErrores();
+                            StreamWriter FilaEThtml = new StreamWriter(nombres + "RE.html");
+                            FilaEThtml.Write(htmlRE(tempT));
+                            FilaEThtml.Close();
 
-                        //XML errores
-                        StreamWriter FileXMLE = new StreamWriter(nombres + "RE.xml");
-                        FileXMLE.Write(xmlRE(tempT));
-                        FileXMLE.Close();
-                        //Agrega expresiones regulares y lexemas a memoria
-                        Lexemas.AddRange(analizador.getLexemas());
-                        Expresiones.AddRange(analizador.getExpresiones());
-                        Conjuntos.AddRange(analizador.getConjuntos());
-                        Console.WriteLine("");
+                            //XML errores
+                            StreamWriter FileXMLE = new StreamWriter(nombres + "RE.xml");
+                            FileXMLE.Write(xmlRE(tempT));
+                            FileXMLE.Close();
+                            //Agrega expresiones regulares y lexemas a memoria
+                            Lexemas.AddRange(analizador.getLexemas());
+                            Expresiones.AddRange(analizador.getExpresiones());
+                            Conjuntos.AddRange(analizador.getConjuntos());
+                            Console.WriteLine("");
+                        }
                     }
+
+                    //generarThompson();
                 }
+                //Colocar imagen inicial en el afn
+                //ExpReg ex = (ExpReg)Expresiones[0];
+                //picAFN.Image = Image.FromFile(ex.getNombre()+"_AFN.png");
 
-                //generarThompson();
+
+
+                //Colocar imagen inicial en el afd
+                //picAFD.Image = Image.FromFile(ex.getNombre() + "_AFD.png");
+
+
             }
-            //Colocar imagen inicial en el afn
-            //ExpReg ex = (ExpReg)Expresiones[0];
-            //picAFN.Image = Image.FromFile(ex.getNombre()+"_AFN.png");
-
-
-
-            //Colocar imagen inicial en el afd
-            //picAFD.Image = Image.FromFile(ex.getNombre() + "_AFD.png");
-
+            catch (InvalidCastException er)
+            {
+                Console.WriteLine(er.ToString());
+            }
 
 
         }
@@ -252,13 +260,21 @@ namespace Proyecto_1
 
         private void reporteLexicoToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            string nombres = tabControl1.SelectedTab.Text;
-            string[] a = nombres.Split('.');
-            nombres = a[0];
-            System.Diagnostics.Process.Start(nombres + "RT.html");
-            System.Diagnostics.Process.Start(nombres + "RE.html");
-            System.Diagnostics.Process.Start(nombres + "RT.xml");
-            System.Diagnostics.Process.Start(nombres + "RE.xml");
+            try
+            {
+                string nombres = tabControl1.SelectedTab.Text;
+                string[] a = nombres.Split('.');
+                nombres = a[0];
+                System.Diagnostics.Process.Start(nombres + "RT.html");
+                System.Diagnostics.Process.Start(nombres + "RE.html");
+                System.Diagnostics.Process.Start(nombres + "RT.xml");
+                System.Diagnostics.Process.Start(nombres + "RE.xml");
+            }
+            catch (InvalidCastException er)
+            {
+                Console.WriteLine(er.ToString());
+            }
+
         }
 
         private void htmlLex()
@@ -413,182 +429,191 @@ namespace Proyecto_1
 
         private void analizarLexemasToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            bool encontroCadena;//Ya no sigue evaluando si encuentra conjunto 
-
-            bool encontro;//Si no encuentra match ya no sigue evaluando
-            bool encontroEsp;//Ya no sigue evaluando si encuentra cadena 
-            bool exist; //Si no existe no evalua 
-            ExpReg exp; //Expresion regular que nos ayudara a evaluar
-            int estado;//Maneja los moviminetos de los estados
-            Estado est = null;//Estado en el que esta  
-            //Analizo todas los lexemas guardados 
-            foreach (Lexema lex in Lexemas)
+            try
             {
-                //Reinicia variables para la evaluacion
-                encontroCadena = false;
-                encontro = true;
-                encontroEsp = false;
-                exp = null;
-                est = null;
-                estado = 0;
-                exist = false;
-                //Busco si existe la ER
-                foreach (ExpReg er in Expresiones)
+                bool encontroCadena;//Ya no sigue evaluando si encuentra conjunto 
+
+                bool encontro;//Si no encuentra match ya no sigue evaluando
+                bool encontroEsp;//Ya no sigue evaluando si encuentra cadena 
+                bool exist; //Si no existe no evalua 
+                ExpReg exp; //Expresion regular que nos ayudara a evaluar
+                int estado;//Maneja los moviminetos de los estados
+                Estado est = null;//Estado en el que esta  
+                                  //Analizo todas los lexemas guardados 
+                foreach (Lexema lex in Lexemas)
                 {
-                    //Guarda en exp la ultima expresion regular con el nombre del lexema
-                    if (er.getNombre().Equals(lex.getID()))
+                    //Reinicia variables para la evaluacion
+                    encontroCadena = false;
+                    encontro = true;
+                    encontroEsp = false;
+                    exp = null;
+                    est = null;
+                    estado = 0;
+                    exist = false;
+                    //Busco si existe la ER
+                    foreach (ExpReg er in Expresiones)
                     {
-                        exist = true;
-                        exp = er;
-
-                    }
-                }
-                if (exist)
-                {//Si existe entonces evalua
-                    //Obtiene los caracteres del lexema a evaluar
-                    char[] caracteres = lex.getCadena().ToCharArray();
-                    //Recorre todos los caracteres
-                    for (int i = 0; i < caracteres.Length; i++)
-                    {
-                        encontroCadena = false;
-                        
-                        encontroEsp = false;
-                        if (encontro)
+                        //Guarda en exp la ultima expresion regular con el nombre del lexema
+                        if (er.getNombre().Equals(lex.getID()))
                         {
-                            //Cambio de estado para evaluar cada char
-                            est = exp.getEstado(estado);
-                            //Busco si tiene transicion con alguna cadena
-                            //Forma la cadena si se mueve no reviso los conjuntos 
-                            //Recorro los terminales de ese estado
-                            for (int j = 0; j < est.getTeminales().Count; j++)
-                            {
-                                Token tok = (Token)est.getTeminales()[j];
-                                if (tok.getToken() == 23  && caracteres[i] == 10)//salto de linea
-                                {
-                                    estado = est.getTransicion()[j];
-                                    encontroEsp = true;
-                                    
-                                    break;
-                                }
-                                else if (tok.getToken() == 24 && caracteres[i] == 10)//Tabulacion
-                                {
-                                    estado = est.getTransicion()[j];
-                                    encontroEsp = true;
-                                    
-                                    break;
-                                }
-                                else if (tok.getToken() == 25 && caracteres[i] == 39)//comilla simples
-                                {
-                                    estado = est.getTransicion()[j];
-                                    encontroEsp = true;
-                                    
-                                    break;
-                                }
-                                else if (tok.getToken() == 26 && caracteres[i] == 92  && caracteres[i+1] == 34)//salto de linea
-                                {
-                                    estado = est.getTransicion()[j];
-                                    encontroEsp = true;
-                                    
-                                    i++;
-                                    break;
-                                }
+                            exist = true;
+                            exp = er;
 
-                            }
-                            //
+                        }
+                    }
+                    if (exist)
+                    {//Si existe entonces evalua
+                     //Obtiene los caracteres del lexema a evaluar
+                        char[] caracteres = lex.getCadena().ToCharArray();
+                        //Recorre todos los caracteres
+                        for (int i = 0; i < caracteres.Length; i++)
+                        {
+                            encontroCadena = false;
 
-                            
-                            if (!encontroEsp)//No encontro cadena busca en conjunto
+                            encontroEsp = false;
+                            if (encontro)
                             {
-                                //
+                                //Cambio de estado para evaluar cada char
+                                est = exp.getEstado(estado);
+                                //Busco si tiene transicion con alguna cadena
+                                //Forma la cadena si se mueve no reviso los conjuntos 
+                                //Recorro los terminales de ese estado
                                 for (int j = 0; j < est.getTeminales().Count; j++)
                                 {
                                     Token tok = (Token)est.getTeminales()[j];
-                                    //Si el termna es cadea y tiene transicion 
-                                    if (tok.getToken() == 11 && est.getTransicion()[j] >= 0)//evaluo
+                                    if (tok.getToken() == 23 && caracteres[i] == 10)//salto de linea
                                     {
-                                        //Se obtiene el tamaño de la cadena del temrinal
-                                        int tamaño = tok.getLexema().Length;
-                                        string cadena = "";
-                                        if (tamaño + i <= caracteres.Length)
-                                        {
-                                            for (int k = 0; k < tamaño; k++)
-                                            {
-                                                cadena += caracteres[i + k];
-                                            }
-                                            if (cadena.Equals(tok.getLexema()))
-                                            {
-                                                estado = est.getTransicion()[j];
-                                                i = i + tamaño;
-                                                encontroCadena = true;
-                                                break;
-                                            }
-                                        }
+                                        estado = est.getTransicion()[j];
+                                        encontroEsp = true;
 
+                                        break;
+                                    }
+                                    else if (tok.getToken() == 24 && caracteres[i] == 10)//Tabulacion
+                                    {
+                                        estado = est.getTransicion()[j];
+                                        encontroEsp = true;
 
+                                        break;
+                                    }
+                                    else if (tok.getToken() == 25 && caracteres[i] == 39)//comilla simples
+                                    {
+                                        estado = est.getTransicion()[j];
+                                        encontroEsp = true;
+
+                                        break;
+                                    }
+                                    else if (tok.getToken() == 26 && caracteres[i] == 92 && caracteres[i + 1] == 34)//salto de linea
+                                    {
+                                        estado = est.getTransicion()[j];
+                                        encontroEsp = true;
+
+                                        i++;
+                                        break;
                                     }
 
                                 }
-                                
+                                //
 
 
-
-                            }
-                            if (!encontroCadena && !encontroEsp)
-                            {
-                                //caracteres especiales
-                                //Si no se mueve busco en los conjuntos
-                                Conjunto con = getConj(caracteres[i]);
-                                //Recorro los terminales de ese estado
-                                if (con != null)
+                                if (!encontroEsp)//No encontro cadena busca en conjunto
                                 {
+                                    //
                                     for (int j = 0; j < est.getTeminales().Count; j++)
                                     {
-
                                         Token tok = (Token)est.getTeminales()[j];
-                                        //Si no es terminal y si tiene transicion evalua 
-                                        if (tok.getToken() == 5 && est.getTransicion()[j] >= 0)
+                                        //Si el termna es cadea y tiene transicion 
+                                        if (tok.getToken() == 11 && est.getTransicion()[j] >= 0)//evaluo
                                         {
-                                            if (tok.getLexema().Equals(con.getNombre()))
+                                            //Se obtiene el tamaño de la cadena del temrinal
+                                            int tamaño = tok.getLexema().Length;
+                                            string cadena = "";
+                                            if (tamaño + i <= caracteres.Length)
                                             {
-                                                estado = est.getTransicion()[j];
-
-                                                break;
+                                                for (int k = 0; k < tamaño; k++)
+                                                {
+                                                    cadena += caracteres[i + k];
+                                                }
+                                                if (cadena.Equals(tok.getLexema()))
+                                                {
+                                                    estado = est.getTransicion()[j];
+                                                    i = i + tamaño;
+                                                    encontroCadena = true;
+                                                    break;
+                                                }
                                             }
+
+
                                         }
-                                        else if (j == est.getTeminales().Count - 1) encontro = false;
 
                                     }
-                                }
 
-                                //Si no encuentra caracter especial detiene por completo la evaluacion del lexema bandera = false;
+
+
+
+                                }
+                                if (!encontroCadena && !encontroEsp)
+                                {
+                                    //caracteres especiales
+                                    //Si no se mueve busco en los conjuntos
+                                    Conjunto con = getConj(caracteres[i]);
+                                    //Recorro los terminales de ese estado
+                                    if (con != null)
+                                    {
+                                        for (int j = 0; j < est.getTeminales().Count; j++)
+                                        {
+
+                                            Token tok = (Token)est.getTeminales()[j];
+                                            //Si no es terminal y si tiene transicion evalua 
+                                            if (tok.getToken() == 5 && est.getTransicion()[j] >= 0)
+                                            {
+                                                if (tok.getLexema().Equals(con.getNombre()))
+                                                {
+                                                    estado = est.getTransicion()[j];
+
+                                                    break;
+                                                }
+                                            }
+                                            else if (j == est.getTeminales().Count - 1) encontro = false;
+
+                                        }
+                                    }
+
+                                    //Si no encuentra caracter especial detiene por completo la evaluacion del lexema bandera = false;
+                                }
                             }
                         }
+
+
+
+
+
+
+
+                        //Reviso si el estado que termino es de aceptacion 
+                        //Si es le cambio el estado
+                        if (exp.getEstado(estado).getAceptacion())
+                        {
+                            lex.setEstado(true);
+                        }
+
                     }
-
-
-
-
-
-
-
-                    //Reviso si el estado que termino es de aceptacion 
-                    //Si es le cambio el estado
-                    if (exp.getEstado(estado).getAceptacion())
+                    else
                     {
-                        lex.setEstado(true);
+                        Console.WriteLine(lex.getID() + " No existe su ER");
                     }
 
+
+
                 }
-                else
-                {
-                    Console.WriteLine(lex.getID() + " No existe su ER");
-                }
-
-
-
+                htmlLex();
+                xmlLex();
             }
-            htmlLex();
-            xmlLex();
+            catch (InvalidCastException er)
+            {
+                Console.WriteLine(er.ToString());
+            }
+
+
         }
 
         private Conjunto getConj(char c)
@@ -698,9 +723,17 @@ namespace Proyecto_1
 
         private void reporteLexemasToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            System.Diagnostics.Process.Start("RLexemas.html");
-            System.Diagnostics.Process.Start("RLexemas.xml");
-            
+            try
+            {
+                System.Diagnostics.Process.Start("RLexemas.html");
+                System.Diagnostics.Process.Start("RLexemas.xml");
+            }
+            catch (InvalidCastException er)
+            {
+                Console.WriteLine(er.ToString());
+            }
+
+
         }
 
         private void button5_Click(object sender, EventArgs e)
@@ -709,7 +742,7 @@ namespace Proyecto_1
             if (table == 0)
             {
                 table = Expresiones.Count - 1;
-                
+
                 ExpReg ex = (ExpReg)Expresiones[table];
                 tabla.Text = ex.getNombre();
                 picTable.Image = Image.FromFile(ex.getNombre() + "_TABLE.png");
@@ -717,7 +750,7 @@ namespace Proyecto_1
             else
             {
                 table--;
-                
+
                 ExpReg ex = (ExpReg)Expresiones[table];
                 tabla.Text = ex.getNombre();
                 picTable.Image = Image.FromFile(ex.getNombre() + "_TABLE.png");
@@ -737,7 +770,7 @@ namespace Proyecto_1
             else
             {
                 table++;
-                
+
                 ExpReg ex = (ExpReg)Expresiones[table];
                 tabla.Text = ex.getNombre();
                 picTable.Image = Image.FromFile(ex.getNombre() + "_TABLE.png");
@@ -747,6 +780,64 @@ namespace Proyecto_1
         private void picAFN_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private void herramientasToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void reporteXMLToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+
+            }
+            catch (InvalidCastException er)
+            {
+                Console.WriteLine(er.ToString());
+            }
+        }
+
+        private void guardarToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+
+
+                Control controlBox;
+                SaveFileDialog saveFileDialog1 = new SaveFileDialog();
+                if (saveFileDialog1.ShowDialog() == DialogResult.OK)
+                {
+                    if (tabControl1.SelectedTab.HasChildren)
+                    {
+                        string nombres = tabControl1.SelectedTab.Text;
+                        string[] a = nombres.Split('.');
+                        nombres = a[0];
+                        foreach (Control item in tabControl1.SelectedTab.Controls)
+                        {
+                            controlBox = item;
+                            if (controlBox is RichTextBox)
+                            {
+
+                                using (Stream s = File.Open(saveFileDialog1.FileName, FileMode.Create))
+                                using (StreamWriter sw = new StreamWriter(s))
+                                {
+                                    sw.Write(controlBox.Text);
+                                }
+
+
+                            }
+                        }
+
+
+                    }
+                }
+            }
+            catch (InvalidCastException er)
+            {
+                Console.WriteLine(er.ToString());
+            }
         }
     }
 }

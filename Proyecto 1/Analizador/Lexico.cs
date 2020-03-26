@@ -579,13 +579,20 @@ namespace Proyecto_1.Analizador
 
         private void generarThompson()
         {
-            
-            for(int i =0; i < expresiones.Count; i++)
+            try
             {
-                ExpReg temp = (ExpReg)expresiones[i];
-                temp.generarT();
+                for (int i = 0; i < expresiones.Count; i++)
+                {
+                    ExpReg temp = (ExpReg)expresiones[i];
+                    temp.generarT();
 
+                }
             }
+            catch (InvalidCastException e)
+            {
+                Console.WriteLine("ERROR");
+            }
+            
         }
 
         private void guardarLex()

@@ -52,24 +52,24 @@
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.tabControl2 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.afn = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
             this.picAFN = new System.Windows.Forms.PictureBox();
             this.button3 = new System.Windows.Forms.Button();
             this.button4 = new System.Windows.Forms.Button();
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.afd = new System.Windows.Forms.Label();
             this.panelAFD = new System.Windows.Forms.Panel();
             this.picAFD = new System.Windows.Forms.PictureBox();
             this.button2 = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
-            this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
-            this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
-            this.button5 = new System.Windows.Forms.Button();
-            this.button6 = new System.Windows.Forms.Button();
+            this.tabla = new System.Windows.Forms.Label();
             this.panel2 = new System.Windows.Forms.Panel();
             this.picTable = new System.Windows.Forms.PictureBox();
-            this.tabla = new System.Windows.Forms.Label();
-            this.afn = new System.Windows.Forms.Label();
-            this.afd = new System.Windows.Forms.Label();
+            this.button6 = new System.Windows.Forms.Button();
+            this.button5 = new System.Windows.Forms.Button();
+            this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
+            this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -130,8 +130,9 @@
             // guardarToolStripMenuItem
             // 
             this.guardarToolStripMenuItem.Name = "guardarToolStripMenuItem";
-            this.guardarToolStripMenuItem.Size = new System.Drawing.Size(161, 22);
+            this.guardarToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.guardarToolStripMenuItem.Text = "Guardar";
+            this.guardarToolStripMenuItem.Click += new System.EventHandler(this.guardarToolStripMenuItem_Click);
             // 
             // nuevaPestañaToolStripMenuItem
             // 
@@ -163,6 +164,7 @@
             this.herramientasToolStripMenuItem.Name = "herramientasToolStripMenuItem";
             this.herramientasToolStripMenuItem.Size = new System.Drawing.Size(90, 20);
             this.herramientasToolStripMenuItem.Text = "Herramientas";
+            this.herramientasToolStripMenuItem.Click += new System.EventHandler(this.herramientasToolStripMenuItem_Click);
             // 
             // analizarDocumentoToolStripMenuItem
             // 
@@ -198,7 +200,7 @@
             // reporteLexicoToolStripMenuItem
             // 
             this.reporteLexicoToolStripMenuItem.Name = "reporteLexicoToolStripMenuItem";
-            this.reporteLexicoToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.reporteLexicoToolStripMenuItem.Size = new System.Drawing.Size(164, 22);
             this.reporteLexicoToolStripMenuItem.Text = "Reporte Lexico";
             this.reporteLexicoToolStripMenuItem.Click += new System.EventHandler(this.reporteLexicoToolStripMenuItem_Click);
             // 
@@ -207,11 +209,12 @@
             this.reporteXMLToolStripMenuItem.Name = "reporteXMLToolStripMenuItem";
             this.reporteXMLToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.reporteXMLToolStripMenuItem.Text = "Reporte XML";
+            this.reporteXMLToolStripMenuItem.Click += new System.EventHandler(this.reporteXMLToolStripMenuItem_Click);
             // 
             // reporteLexemasToolStripMenuItem
             // 
             this.reporteLexemasToolStripMenuItem.Name = "reporteLexemasToolStripMenuItem";
-            this.reporteLexemasToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.reporteLexemasToolStripMenuItem.Size = new System.Drawing.Size(164, 22);
             this.reporteLexemasToolStripMenuItem.Text = "Reporte Lexemas";
             this.reporteLexemasToolStripMenuItem.Click += new System.EventHandler(this.reporteLexemasToolStripMenuItem_Click);
             // 
@@ -339,6 +342,14 @@
             this.tabPage1.Text = "AFN";
             this.tabPage1.UseVisualStyleBackColor = true;
             // 
+            // afn
+            // 
+            this.afn.AutoSize = true;
+            this.afn.Location = new System.Drawing.Point(163, 25);
+            this.afn.Name = "afn";
+            this.afn.Size = new System.Drawing.Size(0, 13);
+            this.afn.TabIndex = 6;
+            // 
             // panel1
             // 
             this.panel1.AutoScroll = true;
@@ -392,6 +403,14 @@
             this.tabPage2.Text = "AFD";
             this.tabPage2.UseVisualStyleBackColor = true;
             // 
+            // afd
+            // 
+            this.afd.AutoSize = true;
+            this.afd.Location = new System.Drawing.Point(158, 16);
+            this.afd.Name = "afd";
+            this.afd.Size = new System.Drawing.Size(0, 13);
+            this.afd.TabIndex = 3;
+            // 
             // panelAFD
             // 
             this.panelAFD.AutoScroll = true;
@@ -431,30 +450,13 @@
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
-            // openFileDialog1
+            // tabla
             // 
-            this.openFileDialog1.FileName = "openFileDialog1";
-            this.openFileDialog1.Filter = "Archivos ER (*.er)|*.er";
-            // 
-            // button5
-            // 
-            this.button5.Location = new System.Drawing.Point(0, 3);
-            this.button5.Name = "button5";
-            this.button5.Size = new System.Drawing.Size(35, 181);
-            this.button5.TabIndex = 0;
-            this.button5.Text = "<";
-            this.button5.UseVisualStyleBackColor = true;
-            this.button5.Click += new System.EventHandler(this.button5_Click);
-            // 
-            // button6
-            // 
-            this.button6.Location = new System.Drawing.Point(393, 3);
-            this.button6.Name = "button6";
-            this.button6.Size = new System.Drawing.Size(35, 181);
-            this.button6.TabIndex = 1;
-            this.button6.Text = ">";
-            this.button6.UseVisualStyleBackColor = true;
-            this.button6.Click += new System.EventHandler(this.button6_Click);
+            this.tabla.AutoSize = true;
+            this.tabla.Location = new System.Drawing.Point(130, 11);
+            this.tabla.Name = "tabla";
+            this.tabla.Size = new System.Drawing.Size(0, 13);
+            this.tabla.TabIndex = 3;
             // 
             // panel2
             // 
@@ -472,29 +474,30 @@
             this.picTable.TabIndex = 0;
             this.picTable.TabStop = false;
             // 
-            // tabla
+            // button6
             // 
-            this.tabla.AutoSize = true;
-            this.tabla.Location = new System.Drawing.Point(130, 11);
-            this.tabla.Name = "tabla";
-            this.tabla.Size = new System.Drawing.Size(0, 13);
-            this.tabla.TabIndex = 3;
+            this.button6.Location = new System.Drawing.Point(393, 3);
+            this.button6.Name = "button6";
+            this.button6.Size = new System.Drawing.Size(35, 181);
+            this.button6.TabIndex = 1;
+            this.button6.Text = ">";
+            this.button6.UseVisualStyleBackColor = true;
+            this.button6.Click += new System.EventHandler(this.button6_Click);
             // 
-            // afn
+            // button5
             // 
-            this.afn.AutoSize = true;
-            this.afn.Location = new System.Drawing.Point(163, 25);
-            this.afn.Name = "afn";
-            this.afn.Size = new System.Drawing.Size(0, 13);
-            this.afn.TabIndex = 6;
+            this.button5.Location = new System.Drawing.Point(0, 3);
+            this.button5.Name = "button5";
+            this.button5.Size = new System.Drawing.Size(35, 181);
+            this.button5.TabIndex = 0;
+            this.button5.Text = "<";
+            this.button5.UseVisualStyleBackColor = true;
+            this.button5.Click += new System.EventHandler(this.button5_Click);
             // 
-            // afd
+            // openFileDialog1
             // 
-            this.afd.AutoSize = true;
-            this.afd.Location = new System.Drawing.Point(158, 16);
-            this.afd.Name = "afd";
-            this.afd.Size = new System.Drawing.Size(0, 13);
-            this.afd.TabIndex = 3;
+            this.openFileDialog1.FileName = "openFileDialog1";
+            this.openFileDialog1.Filter = "Archivos ER (*.er)|*.er";
             // 
             // Form1
             // 
